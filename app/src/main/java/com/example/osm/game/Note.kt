@@ -10,7 +10,7 @@ class Note(resources: Resources, direction : Int) {
     var x = 0
     var y = 0
     val note_bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.pngwing_com)
-    val note: Bitmap = Bitmap.createScaledBitmap(note_bitmap, note_bitmap.width/4, note_bitmap.height/4, false)
-    val width = note.width/4
-    val height = note.height/4
+    val note: Bitmap = Bitmap.createScaledBitmap(note_bitmap, note_bitmap.width/8, note_bitmap.height/8, false)
+    val width = note.width
+    val height = note.height
 }

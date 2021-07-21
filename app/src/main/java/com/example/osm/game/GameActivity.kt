@@ -29,12 +29,12 @@ class GameActivity : AppCompatActivity() {
         setContentView(gameView)
 
         if (Build.VERSION.SDK_INT >= 30){
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
+            window.insetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
         } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
 
-        gameView.newNote()
+        gameView.newNote(0)
 
     }
 

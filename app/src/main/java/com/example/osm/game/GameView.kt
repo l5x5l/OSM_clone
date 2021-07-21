@@ -13,8 +13,10 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val screenX = screenX
     private val screenY = screenY
     private val noteList = ArrayList<Note>()
+    private val trashNoteList = ArrayList<Note>()
     private val paint = Paint()
 
+    private var count = 0
 
     override fun run() {
         while(isPlaying){
@@ -25,19 +27,29 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     }
 
     private fun update() {
+        if (count % 9 == 0)
+            newNote(0)
+
         for (note in noteList) {
-            Log.d("tag", "note is exists")
-            note.y -= 30
-            if (note.y  < -note.height){
-                noteList.remove(note)
+            note.y += 30
+            if (note.y  >= screenY / 2 - note.height / 2){
+                //noteList.remove(note)
+                trashNoteList.add(note)
             }
         }
+
+        for (note in trashNoteList){
+            noteList.remove(note)
+        }
+
+        trashNoteList.clear()
+
     }
 
     private fun draw() {
         if(holder.surface.isValid){
             var canvas = holder.lockCanvas()
-            canvas.drawColor(resources.getColor(R.color.black))
+            canvas.drawColor(resources.getColor(R.color.white))
             for(note in noteList){
                 //drawColor를 이쪽에 넣으면 이전 2프레임이 반복된다, 왜?
                 canvas.drawBitmap(note.note, note.x.toFloat(), note.y.toFloat(), paint)
@@ -48,7 +60,8 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
 
     private fun sleep() {
         try {
-            Thread.sleep(170)
+            Thread.sleep(17)
+            count += 1
         } catch (e : InterruptedException){
             e.printStackTrace()
         }
@@ -65,10 +78,10 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         thread.join()
     }
 
-    public fun newNote(){
-        val note = Note(resources, 0)
-        note.x = screenX / 2 - note.width
-        note.y = screenY + note.height
+    public fun newNote(direction : Int){
+        val note = Note(resources, direction)
+        note.x = screenX / 2 - note.width / 2
+        note.y = 0 - note.height
         noteList.add(note)
     }
 
