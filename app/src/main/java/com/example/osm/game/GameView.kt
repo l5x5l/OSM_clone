@@ -32,7 +32,8 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val perfect = 100
     private val good = 200
     private val bad = 350
-
+    // 가운데 표시 변수
+    private val center : Center = Center(resources, noteSize)
 
 
     // 테스트끝나면 이거 지우고 update 복원
@@ -114,6 +115,8 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         if(holder.surface.isValid){
             var canvas = holder.lockCanvas()
             canvas.drawColor(resources.getColor(R.color.white))
+
+            canvas.drawBitmap(center.center, ((screenX - center.width) / 2).toFloat(), ((screenY - center.height) / 2).toFloat(), paint)
 
             for (OneDirectionNoteList in noteList){
                 for(note in OneDirectionNoteList){
