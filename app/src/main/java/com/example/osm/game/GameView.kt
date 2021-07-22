@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
 import com.example.osm.R
+import java.lang.StrictMath.abs
 
 import kotlin.collections.ArrayList
 import kotlin.random.Random
@@ -23,48 +24,62 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val speed = 30
     // 순서대로 위, 오른쪽, 아래, 왼쪽 노트
     private val noteList = listOf<ArrayList<Note>>(ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>())
-    private val trashNoteList = listOf<ArrayList<Note>>(ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>())
+    private val clearNoteList = listOf<ArrayList<Note>>(ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>())
     private val positionList = listOf<IntArray>(intArrayOf((screenX - noteSize) / 2, 0 - noteSize), intArrayOf(screenX, (screenY - noteSize) / 2),
             intArrayOf((screenX - noteSize) / 2, screenY), intArrayOf(0 - noteSize, (screenY - noteSize) / 2))
     private val noteSpeedList = listOf<IntArray>(intArrayOf(0, speed), intArrayOf(-speed, 0), intArrayOf(0, -speed), intArrayOf(speed, 0))
+    // 판정 범위 변수
+    private val perfect = 100
+    private val good = 200
+    private val bad = 350
 
-    /*
+
+
     // 테스트끝나면 이거 지우고 update 복원
+    /*
     init {
         newNote(0)
         newNote(0)
         newNote(1)
         newNote(1)
+        newNote(1)
         newNote(2)
         newNote(2)
+        newNote(3)
         newNote(3)
         newNote(3)
 
         noteList[0][0].x = (screenX - noteSize) / 2
-        noteList[0][0].y = 150
+        noteList[0][0].y = (screenY - noteSize) / 2 - 150
         noteList[0][1].x = (screenX - noteSize) / 2
-        noteList[0][1].y = 0
-        noteList[1][0].x = screenX - 400 - noteSize
+        noteList[0][1].y = (screenY - noteSize) / 2 - 350
+        noteList[1][0].x = (screenX - noteSize) / 2 + 150
         noteList[1][0].y = (screenY - noteSize) / 2
-        noteList[1][1].x = screenX - 250 - noteSize
+        noteList[1][1].x = (screenX - noteSize) / 2 + 350
         noteList[1][1].y = (screenY - noteSize) / 2
+        noteList[1][2].x = (screenX - noteSize) / 2 + 550
+        noteList[1][2].y = (screenY - noteSize) / 2
         noteList[2][0].x = (screenX - noteSize) / 2
-        noteList[2][0].y = screenY - 150 - noteSize
+        noteList[2][0].y = (screenY - noteSize) / 2 + 150
         noteList[2][1].x = (screenX - noteSize) / 2
-        noteList[2][1].y = screenY  - noteSize
-        noteList[3][0].x = 400
+        noteList[2][1].y = (screenY - noteSize) / 2 + 350
+        noteList[3][0].x = (screenX - noteSize) / 2 - 150
         noteList[3][0].y = (screenY - noteSize) / 2
-        noteList[3][1].x = 250
+        noteList[3][1].x = (screenX - noteSize) / 2 - 350
         noteList[3][1].y = (screenY - noteSize) / 2
+        noteList[3][2].x = (screenX - noteSize) / 2 - 550
+        noteList[3][2].y = (screenY - noteSize) / 2
     }
-     */
+    */
+
+
 
 
 
     override fun run() {
         while(isPlaying){
             update()
-            clearTrash()
+            clearNote()
             draw()
             sleep()
         }
@@ -72,7 +87,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
 
     private fun update() {
 
-        if (count % 9 == 0){
+        if (count % 30 == 0){
             val temp = Random.nextInt(4)
             newNote(temp)
         }
@@ -88,7 +103,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
                 if (note.stat == "none" && check(temp, note.x, note.y)){
                     //noteList.remove(note)
                     note.stat = "fail"
-                    trashNoteList[temp].add(note)
+                    clearNoteList[temp].add(note)
                 }
             }
         }
@@ -167,7 +182,18 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
                 MotionEvent.ACTION_DOWN -> {            // single touch
                     val temp = checkArea(event.x.toInt(), event.y.toInt())
                     if (!noteList[temp].isNullOrEmpty()){
-
+                        val distance = getDistance(noteList[temp][0].x + noteSize / 2, noteList[temp][0].y + noteSize / 2)
+                        Log.d("ouTouchEvent", "area : " + temp.toString() + " and distance : " + distance.toString())
+                        if(distance <= perfect){
+                            noteList[temp][0].stat = "perfect"
+                            clearNoteList[temp].add(noteList[temp][0])
+                        } else if (distance <= good) {
+                            noteList[temp][0].stat = "good"
+                            clearNoteList[temp].add(noteList[temp][0])
+                        } else if (distance <= bad) {
+                            noteList[temp][0].stat = "bad"
+                            clearNoteList[temp].add(noteList[temp][0])
+                        }
                     }
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> {    // multi touch
@@ -180,12 +206,21 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         return true
     }
 
-    private fun clearTrash() {
+    private fun clearNote() {
         for (i in 0..3){
-            for(note in trashNoteList[i]){
+            for(note in clearNoteList[i]){
                 noteList[i].remove(note)
+                Log.d("clearNote", note.stat)
             }
-            trashNoteList[i].clear()
+            clearNoteList[i].clear()
         }
     }
+
+    // 원래같으면, 제곱을 한 다음 더한 후 루트를 씌우지만, 여기서는 그럴 필요가 없다
+    // x와 y 좌표는 bitmap 의 중앙 좌료를 의미한다.
+    private fun getDistance(x : Int, y : Int) : Int {
+        return abs(x - screenX / 2) + abs(y - screenY / 2)
+    }
+
+
 }
