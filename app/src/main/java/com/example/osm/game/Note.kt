@@ -14,6 +14,7 @@ class Note(resources: Resources, direction : Int, size : Int = 200) {
     val note : Bitmap = Bitmap.createScaledBitmap(note_bitmap, size, size, false)
     val width = note.width
     val height = note.height
+    var stat = "none"
 
     fun getDirection() : Int{
         return direction
