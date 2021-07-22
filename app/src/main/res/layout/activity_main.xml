@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/main_layout">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/game_title"
@@ -12,23 +13,19 @@
         android:layout_height="150dp"
         android:src = "@drawable/game_title"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/play_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"/>
+        android:layout_marginTop="60dp"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_background"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:src="@drawable/press_start"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/game_title"
+        android:layout_marginBottom="70dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
