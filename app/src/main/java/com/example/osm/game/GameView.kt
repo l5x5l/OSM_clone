@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
+import androidx.core.content.res.ResourcesCompat
 import com.example.osm.R
 import java.lang.StrictMath.abs
 
@@ -33,8 +34,19 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val perfect = 100
     private val good = 200
     private val bad = 350
-    // 가운데 표시 변수
+    // 가운데 부분
     private val center : Center = Center(resources, noteSize)
+    // 점수 부분
+    private var score = 0
+
+
+    init {
+        // score 글자 색과 글자 크기 지정
+        paint.color = resources.getColor(R.color.black)
+        //paint.setTypeface(resources.getFont(R.font.dunggeunmo)) <- above api level 26
+        paint.typeface = ResourcesCompat.getFont(context, R.font.dunggeunmo)
+        paint.textSize = 100F
+    }
 
     override fun run() {
         while(isPlaying){
@@ -74,6 +86,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         if(holder.surface.isValid){
             var canvas = holder.lockCanvas()
             canvas.drawColor(resources.getColor(R.color.white))
+            canvas.drawText(score.toString(), 50F, (screenY - 100).toFloat(), paint)
 
             canvas.drawBitmap(center.center, ((screenX - center.width) / 2).toFloat(), ((screenY - center.height) / 2).toFloat(), paint)
 
@@ -172,6 +185,11 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
             for(note in clearNoteList[i]){
                 noteList[i].remove(note)
                 Log.d("clearNote", note.stat)
+                when(note.stat) {
+                    "perfect" -> score += 3000
+                    "good" -> score += 1500
+                    "bad" -> score += 500
+                }
             }
             clearNoteList[i].clear()
         }
