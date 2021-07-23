@@ -1,17 +1,19 @@
 package com.example.osm
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isInvisible
 import androidx.core.view.marginTop
 import com.example.osm.databinding.ActivityMainBinding
 import com.example.osm.game.GameActivity
+import com.example.osm.select.SelectActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,9 +25,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        binding.mainLayout.setOnClickListener { goToGame() }
+        binding.mainLayout.setOnClickListener { goToSelectActivity() }
 
         setContentView(binding.root)
+
+        if (Build.VERSION.SDK_INT >= 30){
+            //or WindowInsets.Type.navigationBars() 이걸 추가해도 화면 터치하면 그냥 다시 나온다...
+            //상단바를 한번 보이면 그 이후로 계속 보이게 된다.
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
     }
 
     override fun onResume() {
@@ -44,8 +54,8 @@ class MainActivity : AppCompatActivity() {
         start_button_thread.join()
     }
 
-    fun goToGame() {
-        val intent = Intent(this, GameActivity::class.java)
+    fun goToSelectActivity() {
+        val intent = Intent(this, SelectActivity::class.java)
         startActivity(intent)
     }
 
