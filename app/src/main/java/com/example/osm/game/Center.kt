@@ -6,8 +6,9 @@ import android.graphics.BitmapFactory
 import com.example.osm.R
 
 class Center(resources: Resources, size : Int) {
-    val center_bitmap : Bitmap = BitmapFactory.decodeResource(resources, R.drawable.center)
-    val center : Bitmap = Bitmap.createScaledBitmap(center_bitmap, size, size, false)
+    val center_bitmap : Bitmap = BitmapFactory.decodeResource(resources, R.drawable.center_thick)
+    val centerSize = (size * 1.3).toInt()
+    val center : Bitmap = Bitmap.createScaledBitmap(center_bitmap, centerSize, centerSize, false)
     var width = center.width
     var height = center.height
 }

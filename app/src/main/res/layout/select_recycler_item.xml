@@ -17,6 +17,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
             tools:src="@drawable/ic_launcher_background"/>
 
         <androidx.appcompat.widget.AppCompatTextView

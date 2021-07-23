@@ -23,6 +23,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private var noteSize = 200
     private val speed = 30
     // 순서대로 위, 오른쪽, 아래, 왼쪽 노트
+    private val noteImage = listOf<Int>(R.drawable.up, R.drawable.right, R.drawable.down, R.drawable.left)
     private val noteList = listOf<ArrayList<Note>>(ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>())
     private val clearNoteList = listOf<ArrayList<Note>>(ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>())
     private val positionList = listOf<IntArray>(intArrayOf((screenX - noteSize) / 2, 0 - noteSize), intArrayOf(screenX, (screenY - noteSize) / 2),
@@ -34,48 +35,6 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val bad = 350
     // 가운데 표시 변수
     private val center : Center = Center(resources, noteSize)
-
-
-    // 테스트끝나면 이거 지우고 update 복원
-    /*
-    init {
-        newNote(0)
-        newNote(0)
-        newNote(1)
-        newNote(1)
-        newNote(1)
-        newNote(2)
-        newNote(2)
-        newNote(3)
-        newNote(3)
-        newNote(3)
-
-        noteList[0][0].x = (screenX - noteSize) / 2
-        noteList[0][0].y = (screenY - noteSize) / 2 - 150
-        noteList[0][1].x = (screenX - noteSize) / 2
-        noteList[0][1].y = (screenY - noteSize) / 2 - 350
-        noteList[1][0].x = (screenX - noteSize) / 2 + 150
-        noteList[1][0].y = (screenY - noteSize) / 2
-        noteList[1][1].x = (screenX - noteSize) / 2 + 350
-        noteList[1][1].y = (screenY - noteSize) / 2
-        noteList[1][2].x = (screenX - noteSize) / 2 + 550
-        noteList[1][2].y = (screenY - noteSize) / 2
-        noteList[2][0].x = (screenX - noteSize) / 2
-        noteList[2][0].y = (screenY - noteSize) / 2 + 150
-        noteList[2][1].x = (screenX - noteSize) / 2
-        noteList[2][1].y = (screenY - noteSize) / 2 + 350
-        noteList[3][0].x = (screenX - noteSize) / 2 - 150
-        noteList[3][0].y = (screenY - noteSize) / 2
-        noteList[3][1].x = (screenX - noteSize) / 2 - 350
-        noteList[3][1].y = (screenY - noteSize) / 2
-        noteList[3][2].x = (screenX - noteSize) / 2 - 550
-        noteList[3][2].y = (screenY - noteSize) / 2
-    }
-    */
-
-
-
-
 
     override fun run() {
         while(isPlaying){
@@ -149,7 +108,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     }
 
     public fun newNote(direction : Int){
-        val note = Note(resources, direction, noteSize)
+        val note = Note(resources, direction, noteSize, noteImage[direction])
         note.x = positionList[direction][0] //screenX / 2 - note.width / 2
         note.y = positionList[direction][1]
         noteList[direction].add(note)
@@ -186,7 +145,6 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
                     val temp = checkArea(event.x.toInt(), event.y.toInt())
                     if (!noteList[temp].isNullOrEmpty()){
                         val distance = getDistance(noteList[temp][0].x + noteSize / 2, noteList[temp][0].y + noteSize / 2)
-                        Log.d("ouTouchEvent", "area : " + temp.toString() + " and distance : " + distance.toString())
                         if(distance <= perfect){
                             noteList[temp][0].stat = "perfect"
                             clearNoteList[temp].add(noteList[temp][0])
