@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
     fun goToSelectActivity() {
         selectIntent = Intent(this, SelectActivity::class.java)
         startActivity(selectIntent)
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout)
     }
 
     inner class titleThread() : Thread() {

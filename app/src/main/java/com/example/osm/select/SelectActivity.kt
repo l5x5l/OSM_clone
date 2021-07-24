@@ -48,6 +48,12 @@ class SelectActivity : AppCompatActivity() {
         }
     }
 
+    // 왜 animation 을 onDestroy 에 넣으면 안되는가?
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout)
+    }
+
     fun goToGame() {
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
