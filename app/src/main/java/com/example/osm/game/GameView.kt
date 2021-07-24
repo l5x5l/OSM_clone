@@ -23,6 +23,9 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private var count = 0
     private var noteSize = 200
     private val speed = 30
+    // 배경화면
+    private var background1 = Background(screenX, screenY, resources)
+    private var background2 = Background(screenX, screenY, resources)
     // 순서대로 위, 오른쪽, 아래, 왼쪽 노트
     private val noteImage = listOf<Int>(R.drawable.up, R.drawable.right, R.drawable.down, R.drawable.left)
     private val noteList = listOf<ArrayList<Note>>(ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>(), ArrayList<Note>())
@@ -39,8 +42,13 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     // 점수 부분
     private var score = 0
 
+    // screenRatio
+    var screenRatioX = 1920f / screenX
+    var screenRatioY = 1080f / screenY
 
     init {
+        // 배경화면 이동용도 background2의 x좌표 설정
+        background2.x = screenX
         // score 글자 색과 글자 크기 지정
         paint.color = resources.getColor(R.color.black)
         //paint.setTypeface(resources.getFont(R.font.dunggeunmo)) <- above api level 26
@@ -59,6 +67,11 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
 
     private fun update() {
 
+        background1.x -= (10 * screenRatioX).toInt()
+        background2.x -= (10 * screenRatioX).toInt()
+        if (background1.x + background1.background.width < 0) background1.x = screenX
+        if (background2.x + background2.background.width < 0) background2.x = screenX
+
         if (count % 30 == 0){
             val temp = Random.nextInt(4)
             newNote(temp)
@@ -73,7 +86,6 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
                 note.x += noteSpeedList[temp][0]
                 note.y += noteSpeedList[temp][1]
                 if (note.stat == "none" && check(temp, note.x, note.y)){
-                    //noteList.remove(note)
                     note.stat = "fail"
                     clearNoteList[temp].add(note)
                 }
@@ -85,7 +97,10 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private fun draw() {
         if(holder.surface.isValid){
             var canvas = holder.lockCanvas()
-            canvas.drawColor(resources.getColor(R.color.white))
+            //canvas.drawColor(resources.getColor(R.color.black))
+            canvas.drawBitmap(background1.background, background1.x.toFloat(), background1.y.toFloat(), paint)
+            canvas.drawBitmap(background2.background, background2.x.toFloat(), background2.y.toFloat(), paint)
+
             canvas.drawText(score.toString(), 50F, (screenY - 100).toFloat(), paint)
 
             canvas.drawBitmap(center.center, ((screenX - center.width) / 2).toFloat(), ((screenY - center.height) / 2).toFloat(), paint)
@@ -175,7 +190,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
                     }
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> {    // multi touch
-                    Log.d("터치 이벤트", "multi touch!")
+                    //Log.d("터치 이벤트", "multi touch!")
 
                 }
             }
@@ -188,11 +203,14 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         for (i in 0..3){
             for(note in clearNoteList[i]){
                 noteList[i].remove(note)
-                Log.d("clearNote", note.stat)
+                //Log.d("clearNote", note.stat)
                 when(note.stat) {
                     "perfect" -> score += 3000
                     "good" -> score += 1500
                     "bad" -> score += 500
+                    "fail" -> {
+                        // hp 줄인 다음, hp가 0 이하인지 비교
+                    }
                 }
             }
             clearNoteList[i].clear()
