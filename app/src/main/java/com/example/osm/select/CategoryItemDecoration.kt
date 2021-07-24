@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class CategoryItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private var size12 : Int = dpToPx(context, 12)
+    private var size6 : Int = dpToPx(context, 6)
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
@@ -19,10 +20,10 @@ class CategoryItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             outRect.bottom = size12
         }
 
-        if (position % 3 == 1) {
-            outRect.left = size12
-            outRect.right = size12
-        }
+
+        outRect.left = size6
+        outRect.right = size6
+
     }
 
     private fun dpToPx(context: Context, dp : Int) : Int {
