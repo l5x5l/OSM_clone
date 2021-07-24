@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     var title_thread = titleThread()
     var start_button_thread = startButtonThread()
+    private lateinit var selectIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +56,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToSelectActivity() {
-        val intent = Intent(this, SelectActivity::class.java)
-        startActivity(intent)
+        selectIntent = Intent(this, SelectActivity::class.java)
+        startActivity(selectIntent)
     }
 
     inner class titleThread() : Thread() {

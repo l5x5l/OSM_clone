@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".select.SelectActivity">
+    tools:context=".select.SelectActivity"
+    android:background="@drawable/select_background">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_margin="25dp"

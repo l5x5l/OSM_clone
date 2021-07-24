@@ -24,11 +24,12 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22dp"
+            android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"
+            android:background="@color/white"
             tools:text="설명설명"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
