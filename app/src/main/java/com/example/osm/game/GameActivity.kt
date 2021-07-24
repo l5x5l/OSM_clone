@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.example.osm.R
@@ -33,11 +34,12 @@ class GameActivity : AppCompatActivity() {
         binding.pauseButton.setOnClickListener {
             if (isPlaying){
                 gameView.pause()
-                // 여기에 클릭가능한 상위 frameLayout의 visibility를 true로 해서 터치가 안먹히도록 한다
+                binding.pauseView.visibility = View.VISIBLE
                 isPlaying = false
                 binding.pauseButton.setImageResource(R.drawable.start_button)
             } else {
                 gameView.resume()
+                binding.pauseView.visibility = View.GONE
                 isPlaying = true
                 binding.pauseButton.setImageResource(R.drawable.pause_button)
             }
@@ -58,14 +60,17 @@ class GameActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (isPlaying)
+        if (isPlaying){ // 사용자가 일시중지를 하지 않은 상태에서 onPause
             gameView.pause()
+            binding.pauseView.visibility = View.VISIBLE
+        }
     }
 
     override fun onResume() {
         super.onResume()
         if (isPlaying){
             gameView.resume()
+            binding.pauseView.visibility = View.GONE
         }
         else {
             // 이러면 draw 가 안되서 화면이 안그려진다
