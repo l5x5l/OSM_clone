@@ -14,6 +14,7 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var gameView : GameView
     private lateinit var binding : ActivityGameBinding
+    private var isPlaying = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,19 @@ class GameActivity : AppCompatActivity() {
             var point = Point()
             windowManager.defaultDisplay.getSize(point)
             GameView(this, point.x, point.y)
+        }
+
+        binding.pauseButton.setOnClickListener {
+            if (isPlaying){
+                gameView.pause()
+                // 여기에 클릭가능한 상위 frameLayout의 visibility를 true로 해서 터치가 안먹히도록 한다
+                isPlaying = false
+                binding.pauseButton.setImageResource(R.drawable.start_button)
+            } else {
+                gameView.resume()
+                isPlaying = true
+                binding.pauseButton.setImageResource(R.drawable.pause_button)
+            }
         }
 
         //setContentView(gameView)
@@ -44,12 +58,19 @@ class GameActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        gameView.pause()
+        if (isPlaying)
+            gameView.pause()
     }
 
     override fun onResume() {
         super.onResume()
-        gameView.resume()
+        if (isPlaying){
+            gameView.resume()
+        }
+        else {
+            // 이러면 draw 가 안되서 화면이 안그려진다
+            gameView.oneDraw()
+        }
     }
 
 }

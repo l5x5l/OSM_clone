@@ -102,7 +102,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
 
     private fun sleep() {
         try {
-            Thread.sleep(33)
+            Thread.sleep(17)
             count += 1
         } catch (e : InterruptedException){
             e.printStackTrace()
@@ -118,6 +118,10 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     fun pause() {
         isPlaying = false
         thread.join()
+    }
+
+    public fun oneDraw(){
+        draw()
     }
 
     public fun newNote(direction : Int){
