@@ -35,13 +35,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/top_guide"
-            app:layout_constraintEnd_toStartOf="@id/score_image"
+            app:layout_constraintEnd_toStartOf="@id/result_text"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_guide"
             android:visibility="visible"
             android:scrollbars="none"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:padding="12dp"
-            android:id="@+id/score_image"
+            android:id="@+id/result_text"
             app:layout_constraintTop_toTopOf="@id/top_guide"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/score_recyclerview"
@@ -63,8 +64,8 @@
             android:textSize="24sp"
             android:textColor="@color/white"
             android:clickable="true"
-            app:layout_constraintStart_toStartOf="@id/score_image"
-            app:layout_constraintTop_toBottomOf="@id/score_image"
+            app:layout_constraintStart_toStartOf="@id/result_text"
+            app:layout_constraintTop_toBottomOf="@id/result_text"
             app:layout_constraintEnd_toStartOf="@id/home_button"
             app:layout_constraintBottom_toBottomOf="@id/bottom_guide"/>
 
@@ -77,8 +78,8 @@
             android:textSize="24sp"
             android:textColor="@color/white"
             android:clickable="true"
-            app:layout_constraintEnd_toEndOf="@id/score_image"
-            app:layout_constraintTop_toBottomOf="@id/score_image"
+            app:layout_constraintEnd_toEndOf="@id/result_text"
+            app:layout_constraintTop_toBottomOf="@id/result_text"
             app:layout_constraintStart_toEndOf="@id/retry_button"
             app:layout_constraintBottom_toBottomOf="@id/bottom_guide"/>
 

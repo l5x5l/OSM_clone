@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="@color/white"
-        android:textSize="50dp"
+        android:textSize="36dp"
         tools:text = "1."/>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -21,10 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/number"
-        app:layout_constraintBottom_toBottomO="@id/number"
+        app:layout_constraintBottom_toBottomOf="@id/number"
         app:layout_constraintStart_toEndOf="@id/number"
         android:textColor="@color/white"
-        android:textSize="50dp"
+        android:textSize="36dp"
         tools:text = "85% "
         android:layout_marginStart="12dp"/>
 
