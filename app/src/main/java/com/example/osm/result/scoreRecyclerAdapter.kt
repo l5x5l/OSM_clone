@@ -24,7 +24,7 @@ class scoreRecyclerAdapter(context: Context, private val dataList : ArrayList<In
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.number.text = (position + 1).toString() + "."
-        holder.score.text = dataList[position].toString() + "%"
+        holder.score.text = dataList[position].toString()
     }
 
     override fun getItemCount(): Int = dataList.size

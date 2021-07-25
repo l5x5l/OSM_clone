@@ -2,7 +2,6 @@ package com.example.osm.game
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
 import androidx.core.content.res.ResourcesCompat
@@ -46,7 +45,10 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private var hp = 10
     private val hp_cell = "\u25a0"
     // 종료 부분
-    private var isEnd = false
+    private val endTime = 700
+    // 노트 생성 주기
+    private val noteInterval = 30
+    private val startTime = 100
 
     // screenRatio
     var screenRatioX = 1920f / screenX
@@ -83,7 +85,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         if (background1.x + background1.background.width < 0) background1.x = screenX
         if (background2.x + background2.background.width < 0) background2.x = screenX
 
-        if (count % 30 == 0){
+        if (count % noteInterval == 0 && count >= startTime && count <= endTime - noteInterval * 2){
             val temp = Random.nextInt(4)
             newNote(temp)
         }
@@ -242,7 +244,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
             (context as GameActivity).goToResult(false)
         }
 
-        if (count >= 600) {
+        if (count >= endTime) {
             (context as GameActivity).goToResult(true, score)
         }
     }

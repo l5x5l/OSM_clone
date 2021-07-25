@@ -92,6 +92,7 @@ class GameActivity : AppCompatActivity() {
         intent.putExtra("isClear", isClear)
         intent.putExtra("score", score)
         this.startActivity(intent)
+        overridePendingTransition(R.anim.vertical_enter, R.anim.fadeout) // 이거 다음에 finish 오면 어쩌지
         finish()
     }
 
