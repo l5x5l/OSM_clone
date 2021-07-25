@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".result.ResultActivity"
+    android:id="@+id/main_layout"
+    android:background="@drawable/background_afternoon">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="#4a655a"
+        android:layout_margin="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/content_layout">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/top_guide"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom_guide"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/score_recyclerview"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/top_guide"
+            app:layout_constraintEnd_toStartOf="@id/score_image"
+            android:visibility="visible"
+            android:scrollbars="none"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:padding="12dp"
+            android:id="@+id/score_image"
+            app:layout_constraintTop_toTopOf="@id/top_guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/score_recyclerview"
+            app:layout_constraintBottom_toTopOf="@id/retry_button"
+            android:maxLines="2"
+            android:textSize="75sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            tools:text = "game\nover"
+            android:layout_width="250dp"
+            android:layout_height="200dp"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/retry_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="\u25b6 retry"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="@id/score_image"
+            app:layout_constraintTop_toBottomOf="@id/score_image"
+            app:layout_constraintEnd_toStartOf="@id/home_button"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_guide"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/home_button"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="\u25b6 home"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="@id/score_image"
+            app:layout_constraintTop_toBottomOf="@id/score_image"
+            app:layout_constraintStart_toEndOf="@id/retry_button"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_guide"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="24dp"
+        android:src="@drawable/frame"
+        android:scaleType="fitXY"/>
+
+</FrameLayout>

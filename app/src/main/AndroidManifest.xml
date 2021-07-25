@@ -10,11 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OSM">
         <activity
+            android:name=".result.ResultActivity"
+            android:screenOrientation="landscape"
+            android:noHistory="true"></activity>
+        <activity
             android:name=".select.SelectActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".game.GameActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:noHistory="true"/>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape">
