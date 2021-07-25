@@ -20,6 +20,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val screenX = screenX
     private val screenY = screenY
     private val paint = Paint()
+    private val paint2 = Paint()
     private var count = 0
     private var noteSize = 200
     private val speed = 30
@@ -41,6 +42,11 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private val center : Center = Center(resources, noteSize)
     // 점수 부분
     private var score = 0
+    // hp 부분
+    private var hp = 10
+    private val hp_cell = "\u25a0"
+    // 종료 부분
+    private var isEnd = false
 
     // screenRatio
     var screenRatioX = 1920f / screenX
@@ -50,16 +56,21 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         // 배경화면 이동용도 background2의 x좌표 설정
         background2.x = screenX
         // score 글자 색과 글자 크기 지정
-        paint.color = resources.getColor(R.color.black)
+        paint.color = resources.getColor(R.color.black, null)
         //paint.setTypeface(resources.getFont(R.font.dunggeunmo)) <- above api level 26
         paint.typeface = ResourcesCompat.getFont(context, R.font.dunggeunmo)
         paint.textSize = 100F
+        // hp 의 색상을 흰색으로
+        paint2.color = resources.getColor(R.color.white, null)
+        paint2.typeface = ResourcesCompat.getFont(context, R.font.dunggeunmo)
+        paint2.textSize = 100F
     }
 
     override fun run() {
         while(isPlaying){
             update()
             clearNote()
+            checkIsEnd()    //test!!
             draw()
             sleep()
         }
@@ -102,6 +113,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
             canvas.drawBitmap(background2.background, background2.x.toFloat(), background2.y.toFloat(), paint)
 
             canvas.drawText(score.toString(), 50F, (screenY - 100).toFloat(), paint)
+            canvas.drawText(hp_cell.repeat(hp), 50F, 75F, paint2)
 
             canvas.drawBitmap(center.center, ((screenX - center.width) / 2).toFloat(), ((screenY - center.height) / 2).toFloat(), paint)
 
@@ -168,7 +180,8 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         var pointer_count = event?.pointerCount
         if (pointer_count != null) {
-            if (pointer_count > 5) pointer_count = 5
+            if (pointer_count > 5)
+                pointer_count = 5
         }
 
         if (event != null) {
@@ -209,6 +222,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
                     "good" -> score += 1500
                     "bad" -> score += 500
                     "fail" -> {
+                        hp--
                         // hp 줄인 다음, hp가 0 이하인지 비교
                     }
                 }
@@ -223,5 +237,14 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
         return abs(x - screenX / 2) + abs(y - screenY / 2)
     }
 
+    private fun checkIsEnd() {
+        if (hp <= 0){
+            (context as GameActivity).goToResult(false)
+        }
+
+        if (count >= 600) {
+            (context as GameActivity).goToResult(true, score)
+        }
+    }
 
 }

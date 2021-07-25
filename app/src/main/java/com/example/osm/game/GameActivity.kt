@@ -1,20 +1,27 @@
 package com.example.osm.game
 
+import android.content.Intent
 import android.graphics.Point
 import android.graphics.Rect
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.example.osm.R
 import com.example.osm.databinding.ActivityGameBinding
+import com.example.osm.result.ResultActivity
+import kotlin.concurrent.thread
 
 class GameActivity : AppCompatActivity() {
 
     private lateinit var gameView : GameView
     private lateinit var binding : ActivityGameBinding
+    private val handler = Handler(Looper.getMainLooper())
     private var isPlaying = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +75,7 @@ class GameActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         if (isPlaying){
             gameView.resume()
             binding.pauseView.visibility = View.GONE
@@ -75,6 +83,43 @@ class GameActivity : AppCompatActivity() {
         else {
             // 이러면 draw 가 안되서 화면이 안그려진다
             gameView.oneDraw()
+        }
+    }
+
+    fun goToResult(isClear : Boolean, score : Int = 0) {
+        binding.pauseView.text = "loading..."
+        val intent = Intent(this, ResultActivity::class.java)
+        intent.putExtra("isClear", isClear)
+        intent.putExtra("score", score)
+        this.startActivity(intent)
+        finish()
+    }
+
+
+    override fun onRestart() {
+        super.onRestart()
+    }
+
+    // 망함
+    fun waitSeconds(count : Int) {
+        /*
+        thread = Thread {
+            for (i in count downTo 1) {
+                handler.post {
+                    binding.pauseView.text = i.toString()
+                }
+                //Log.d("GameActivity", binding.pauseView.text as String)
+                Thread.sleep(1000)
+            }
+        }
+        thread.start()*/
+
+        for (i in count downTo 1) {
+
+            binding.pauseView.text = i.toString()
+
+            //Log.d("GameActivity", binding.pauseView.text as String)
+            Thread.sleep(1000)
         }
     }
 
