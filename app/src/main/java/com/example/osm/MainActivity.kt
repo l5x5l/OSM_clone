@@ -1,6 +1,7 @@
 package com.example.osm
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,7 +13,6 @@ import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.marginTop
 import com.example.osm.databinding.ActivityMainBinding
-import com.example.osm.game.GameActivity
 import com.example.osm.select.SelectActivity
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +21,11 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     var title_thread = titleThread()
     var start_button_thread = startButtonThread()
+    private var musicThread = MusicThread()
     private lateinit var selectIntent: Intent
+    // music thread 에서 사용할 position
+    private var bgmPoint = 0
+    private val out = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
+
     }
 
     override fun onResume() {
@@ -45,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         title_thread.start()
         start_button_thread = startButtonThread()
         start_button_thread.start()
+        musicThread = MusicThread()
+        musicThread.start()
     }
 
     override fun onPause() {
@@ -53,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         title_thread.join()
         start_button_thread.stopThread()
         start_button_thread.join()
+        musicThread.stopThread()
     }
 
     fun goToSelectActivity() {
@@ -117,5 +125,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    inner class MusicThread() : Thread() {
+        private lateinit var bgmPlayer : MediaPlayer
+
+        override fun run() {
+            bgmPlayer = MediaPlayer.create(out, R.raw.main_bgm)
+            bgmPlayer.isLooping = true
+            bgmPlayer.seekTo(bgmPoint)
+            bgmPlayer.start()
+        }
+
+        fun stopThread() {
+            bgmPlayer.pause()
+            bgmPoint = bgmPlayer.currentPosition
+            bgmPlayer.release()
+            this.interrupt()
+        }
+    }
 
 }

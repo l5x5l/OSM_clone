@@ -34,7 +34,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
             intArrayOf((screenX - noteSize) / 2, screenY), intArrayOf(0 - noteSize, (screenY - noteSize) / 2))
     private val noteSpeedList = listOf<IntArray>(intArrayOf(0, speed), intArrayOf(-speed, 0), intArrayOf(0, -speed), intArrayOf(speed, 0))
     // 판정 범위 변수
-    private val perfect = 100
+    private val perfect = 75
     private val good = 200
     private val bad = 350
     // 가운데 부분
@@ -43,7 +43,7 @@ class GameView(context : Context, screenX : Int, screenY : Int) : SurfaceView(co
     private var score = 0
     // hp 부분
     private var hp = 10
-    private val hp_cell = "\u25a0"
+    private val hp_cell = "\u2665"
     // 종료 부분
     private val endTime = 700
     // 노트 생성 주기
