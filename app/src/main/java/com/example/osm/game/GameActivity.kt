@@ -3,11 +3,8 @@ package com.example.osm.game
 import android.content.Intent
 import android.graphics.Point
 import android.graphics.Rect
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
@@ -23,6 +20,8 @@ class GameActivity : AppCompatActivity() {
     private lateinit var binding : ActivityGameBinding
     private val handler = Handler(Looper.getMainLooper())
     private var isPlaying = true
+    private lateinit var timer : CountDownTimer
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +37,23 @@ class GameActivity : AppCompatActivity() {
             GameView(this, point.x, point.y)
         }
 
+        timer = object:CountDownTimer(3000, 1000) {
+            var count = 3
+            override fun onTick(millisUntilFinished: Long) {
+                binding.pauseView.text = count.toString()
+                count--
+            }
+
+            override fun onFinish() {
+                gameView.resume()
+                binding.pauseView.visibility = View.GONE
+                binding.pauseView.text = "Pause"
+                count = 3
+                isPlaying = true
+                binding.pauseButton.setImageResource(R.drawable.pause_button)
+            }
+        }
+
         binding.pauseButton.setOnClickListener {
             if (isPlaying){
                 gameView.pause()
@@ -45,20 +61,19 @@ class GameActivity : AppCompatActivity() {
                 isPlaying = false
                 binding.pauseButton.setImageResource(R.drawable.start_button)
             } else {
-                gameView.resume()
+                timer.start()
+                /*gameView.resume()
                 binding.pauseView.visibility = View.GONE
                 isPlaying = true
-                binding.pauseButton.setImageResource(R.drawable.pause_button)
+                binding.pauseButton.setImageResource(R.drawable.pause_button)*/
             }
         }
 
-        //setContentView(gameView)
         setContentView(binding.root)
         binding.frameLayout.addView(gameView)
 
 
         if (Build.VERSION.SDK_INT >= 30){
-            //or WindowInsets.Type.navigationBars() 이걸 추가해도 화면 터치하면 그냥 다시 나온다...
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -67,23 +82,25 @@ class GameActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (isPlaying){ // 사용자가 일시중지를 하지 않은 상태에서 onPause
+        if (isPlaying){ // 사용자가 일시중지를 하지 않은 상태에서 onPause 가 되었을 때 (home 버튼)
+            isPlaying = false
             gameView.pause()
             binding.pauseView.visibility = View.VISIBLE
+            binding.pauseButton.setImageResource(R.drawable.start_button)
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (isPlaying){
+        if (isPlaying){ // 맨 처음 실행했을 때 gameView 가 작동되도록
             gameView.resume()
             binding.pauseView.visibility = View.GONE
         }
-        else {
-            // 이러면 draw 가 안되서 화면이 안그려진다
-            gameView.oneDraw()
-        }
+/*        else {
+            gameView.resume()
+            gameView.pause()
+        }*/
     }
 
     fun goToResult(isClear : Boolean, score : Int = 0) {
@@ -99,10 +116,6 @@ class GameActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.fadein, R.anim.fadeout)
-    }
-
-    override fun onRestart() {
-        super.onRestart()
     }
 
     // 망함
